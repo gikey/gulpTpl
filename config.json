@@ -1,0 +1,27 @@
+{
+    "app": {
+        "dev": {
+            "appId": 7654321,
+            "host": "api-test.example.com"
+        },
+        "production": {
+            "appId": 1234567,
+            "host": "api.example.com"
+        }
+    },
+    "server": {
+        "port": 8008,
+        "host": "localhost",
+        "open": "external",
+        "notify": false,
+        "root": "src",
+        "startPath": "views"
+    },
+    "proxys": [{
+        "api": "/api",
+        "target": "http://example.com",
+        "pathRewrite": {
+            "^/api/(.*)": "/$1"
+        }
+    }]
+}

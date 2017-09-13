@@ -1,0 +1,6 @@
+node_modules
+dist
+src/views
+.DS_Store
+.tag*
+package-lock.json
