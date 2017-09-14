@@ -146,7 +146,9 @@ gulp.task('config', callback => {
     for(var c in _config) {
         fs.outputFileSync(`dist/${c}/app.yaml`, tpl.render('app.yaml', {appId: _config[c]['appId']}));
         utils.logger(`🦊  ${c} app.yaml 文件配置完成`);
-        fs.outputFileSync(`dist/${c}/conf/nginx_server.inc`, tpl.render('conf/nginx_server.inc', {host: _config[c]['host']}));
+        fs.outputFileSync(`dist/${c}/conf/nginx_server.inc`, tpl.render('conf/nginx_server.inc', {
+            proxys: _config[c].proxys
+        }));
         utils.logger(`🦊  ${c} nginx_server.inc 文件配置完成`);
         fs.outputFileSync(`dist/${c}/conf/uwsgi.ini`, tpl.render('conf/uwsgi.ini'));
         utils.logger(`🦊  ${c} uwsgi.ini 文件配置完成`);

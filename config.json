@@ -2,11 +2,17 @@
     "app": {
         "dev": {
             "appId": 7654321,
-            "host": "api-test.example.com"
+            "proxys": [{
+                "pathRewrite": "testApi",
+                "host": "api-test.example.com"
+            }]
         },
         "production": {
             "appId": 1234567,
-            "host": "api.example.com"
+            "proxys": [{
+                "pathRewrite": "api",
+                "host": "api.example.com"
+            }]
         }
     },
     "server": {
