@@ -22,7 +22,8 @@ import usemin from 'gulp-usemin';
 import revCollector from 'gulp-rev-collector';
 import config from './config.json';
 import proxy from 'http-proxy-middleware';
-
+import yargs from 'yargs';
+import inject from 'gulp-inject-string';
 
 let build = process.argv[2] === 'build';
 
@@ -215,18 +216,26 @@ gulp.task('usemin', callback => {
         })
 })
 
-gulp.task('zip', callback => {
+gulp.task('zip', () => {
     gulp.src('dist/dev/**')
         .pipe(zip(`dev-${+new Date}.zip`))
         .pipe(gulp.dest('dist'))
-        .on('end', () => {
-            utils.logger(`🦊  dev 打包完成`);
-        })
+        .on('end', () => utils.logger(`🦊  dev 打包完成`))
+
     gulp.src('dist/production/**')
         .pipe(zip(`production-${+new Date}.zip`))
         .pipe(gulp.dest('dist'))
+        .on('end', () => utils.logger(`🦊  production 打包完成`))
+})
+
+gulp.task('debug', callback => {
+    if ( 'false' == yargs.argv.debug ) return callback && callback();
+    gulp.src('dist/dev/app/views/*.html')
+        .pipe(inject.before('</body>', '<script src="../static/js/vconsole.min.js"></script>\n'))
+        .pipe(gulp.dest('dist/dev/app/views'))
         .on('end', () => {
-            utils.logger(`🦊  production 打包完成`);
+            utils.logger(`🦊  测试版本添加 vconsole `);
+            callback && callback();
         })
 })
 
@@ -251,7 +260,7 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
     gulp.watch(['src/**/*', '!src/static/scss', '!src/static/css']).on('change', browserSync.reload);
 });
 
-gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', 'config', 'zip'));
+gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['debug','config'], 'zip'));
 
 gulp.task('default', () => {
     utils.logger('😊  Nothing to do');
