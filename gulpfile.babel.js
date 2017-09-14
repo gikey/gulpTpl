@@ -32,17 +32,11 @@ gulp.task('sass', callback => {
         .pipe(gulpif(!build, plumber()))
         .pipe(gulpif(!build, sourcemaps.init()))
         .pipe(sass())
-        .on('end', () => {
-            utils.logger(`🦊  sass 编译完成 `);
-        })
+        .on('end', () => utils.logger(`🦊  sass 编译完成 `))
         .pipe(postcss(utils.percessors))
-        .on('end', () => {
-            utils.logger(`🦊  postcss 处理完成 `);
-        })
+        .on('end', () => utils.logger(`🦊  postcss 处理完成 `))
         .pipe(gulpif(build, csso()))
-        .on('end', () => {
-            build && utils.logger(`🦊  css 压缩完成 `);
-        })
+        .on('end', () => build && utils.logger(`🦊  css 压缩完成 `))
         .pipe(gulpif(!build, sourcemaps.write('./')))
         .pipe(gulpif(!build, gulp.dest('src/static/css'), gulp.dest('dist/dev/app/static/css')))
         .on('end', () => {
@@ -60,15 +54,11 @@ gulp.task('swig', callback => {
                 cache: false
             }
         }))
-        .on('end', () => {
-            utils.logger(`🦊  swig 编译完成`);
-        })
+        .on('end', () => utils.logger(`🦊  swig 编译完成`))
         .pipe(gulpif(build, htmlmin({
             collapseWhitespace: true
         })))
-        .on('end', () => {
-            build && utils.logger(`🦊  html 压缩完成`);
-        })
+        .on('end', () => build && utils.logger(`🦊  html 压缩完成`))
         .pipe(gulpif(!build, gulp.dest('src/views'), gulp.dest('dist/dev/app/views')))
         .on('end', () => {
             utils.logger(`🦊  html 输出 ${ build ? 'dist/dev/app/views': 'src/views'}`);
@@ -79,9 +69,7 @@ gulp.task('swig', callback => {
 gulp.task('revCss', callback => {
     gulp.src('dist/dev/app/static/css/**/*.css')
         .pipe(rev())
-        .on('end', () => {
-            utils.logger(`🦊  css 文件名 hash `)
-        })
+        .on('end', () => utils.logger(`🦊  css 文件名 hash `))
         .pipe(gulp.dest('dist/dev/app/static/css'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/css'))
@@ -94,9 +82,7 @@ gulp.task('revCss', callback => {
 gulp.task('revImg', callback => {
     gulp.src('dist/dev/app/static/images/*')
         .pipe(rev())
-        .on('end', () => {
-            utils.logger(`🦊  images 文件名 hash `)
-        })
+        .on('end', () => utils.logger(`🦊  images 文件名 hash `))
         .pipe(gulp.dest('dist/dev/app/static/images'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/images'))
@@ -121,9 +107,7 @@ gulp.task('revHtml', callback => {
 gulp.task('revJS', callback => {
     gulp.src('dist/dev/app/static/js/**/*.js')
         .pipe(rev())
-        .on('end', () => {
-            utils.logger(`🦊  js 文件名 hash `);
-        })
+        .on('end', () => utils.logger(`🦊  js 文件名 hash `))
         .pipe(gulp.dest('dist/dev/app/static/js'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/js'))
@@ -145,7 +129,9 @@ gulp.task('config', callback => {
     tpl = new nunjucks.Environment(new nunjucks.FileSystemLoader('nginx'));
 
     for(var c in _config) {
-        fs.outputFileSync(`dist/${c}/app.yaml`, tpl.render('app.yaml', {appId: _config[c]['appId']}));
+        fs.outputFileSync(`dist/${c}/app.yaml`, tpl.render('app.yaml', {
+            appId: _config[c]['appId']
+        }));
         utils.logger(`🦊  ${c} app.yaml 文件配置完成`);
         fs.outputFileSync(`dist/${c}/conf/nginx_server.inc`, tpl.render('conf/nginx_server.inc', {
             proxys: _config[c].proxys
@@ -164,13 +150,9 @@ gulp.task('es6', callback => {
         .pipe(babel({
             presets: ['es2015']
         }))
-        .on('end', () => {
-            utils.logger(`🦊  es6 编译完成`);
-        })
+        .on('end', () => utils.logger(`🦊  es6 编译完成`))
         .pipe(gulpif(build, uglify()))
-        .on('end', () => {
-            build && utils.logger(`🦊  js 压缩完成 `);
-        })
+        .on('end', () => build && utils.logger(`🦊  js 压缩完成 `))
         .pipe(gulpif(!build, sourcemaps.write('./')))
         .pipe(gulpif(!build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
         .on('end', () => {
@@ -250,9 +232,7 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
         browser: config.server.browser,
         notify: config.server.notify,
         middleware: utils.proxys,
-    }, () => {
-        utils.logger(`🦊  服务启动...`)
-    });
+    }, () => utils.logger(`🦊  服务启动...`));
 
     gulp.watch('src/static/scss/**/*.scss', ['sass']);
     gulp.watch('src/static/es6/**/*.js', ['es6']);

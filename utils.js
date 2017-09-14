@@ -9,7 +9,7 @@ module.exports = {
     percessors : [
         require('autoprefixer')(),
         require('postcss-px2rem')({
-            remUnit: 75
+            remUnit: config.rootFontSize || 75
         })
     ],
     proxys: (() => {

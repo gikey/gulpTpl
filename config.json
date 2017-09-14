@@ -15,6 +15,7 @@
             }]
         }
     },
+    "rootFontSize": 75,
     "server": {
         "port": 8008,
         "host": "localhost",

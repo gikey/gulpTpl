@@ -8,12 +8,15 @@
   <meta http-equiv="pragma" content="no-cache" />
   <meta http-equiv="cache-control" content="no-store, must-revalidate" />
   <meta http-equiv="expires" content="0" />
-  <script>document.documentElement.style.fontSize=document.documentElement.clientWidth/10+"px";</script>
-  <title>demo</title>
   <link rel="stylesheet" href="../static/css/style.css">
+  {% block head %}
+  <title>demo</title>
+  {% endblock %}
+  <script>document.documentElement.style.fontSize=document.documentElement.clientWidth/10+"px";</script>
 </head>
 <body>
 {% block body %}{% endblock %}
 <script src="../static/js/index.js"></script>
+{% block script %}{% endblock %}
 </body>
 </html>
