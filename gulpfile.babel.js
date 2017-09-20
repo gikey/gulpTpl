@@ -213,7 +213,7 @@ gulp.task('zip', () => {
 gulp.task('debug', callback => {
     if ( 'false' == yargs.argv.debug ) return callback && callback();
     gulp.src('dist/dev/app/views/*.html')
-        .pipe(inject.before('</body>', '<script src="../static/js/vconsole.min.js"></script>\n'))
+        .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
         .pipe(gulp.dest('dist/dev/app/views'))
         .on('end', () => {
             utils.logger(`🦊  测试版本添加 vconsole `);
