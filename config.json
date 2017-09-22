@@ -16,7 +16,7 @@
         }
     },
     "rootFontSize": 75,
-    "cdnHost": "//cdn.example.com/",
+    "cdnHost": "cdn.example.com",
     "cdnBucket": "bucket",
     "staticFile": ["js", "css", "images"],
     "server": {

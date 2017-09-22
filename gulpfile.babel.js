@@ -98,7 +98,7 @@ gulp.task('revHtml', callback => {
         let staticPrefix = '../static/';
         revConfig.dirReplacements = {};
         config.staticFile.forEach((file) => {
-            revConfig.dirReplacements[staticPrefix+file] = `${config.cdnHost}/${config.cdnBucket}/${file}/`
+            revConfig.dirReplacements[staticPrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
         })
     }
     gulp.src(['dist/rev/**/*.json', 'dist/dev/app/views/**/*.html'])
