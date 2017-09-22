@@ -93,10 +93,16 @@ gulp.task('revImg', callback => {
 });
 
 gulp.task('revHtml', callback => {
+    let revConfig = { replaceReved: true };
+    if(yargs.argv.cdn) {
+        let staticPrefix = '../static/';
+        revConfig.dirReplacements = {};
+        config.staticFile.forEach((file) => {
+            revConfig.dirReplacements[staticPrefix+file] = `${config.cdnHost}/${config.cdnBucket}/${file}/`
+        })
+    }
     gulp.src(['dist/rev/**/*.json', 'dist/dev/app/views/**/*.html'])
-        .pipe(revCollector({
-            replaceReved: true
-        }))
+        .pipe(revCollector(revConfig))
         .pipe(gulp.dest('dist/dev/app/views'))
         .on('end', function() {
             utils.logger(`🦊  html 外链替换 `);
@@ -208,6 +214,18 @@ gulp.task('zip', () => {
         .pipe(zip(`production-${+new Date}.zip`))
         .pipe(gulp.dest('dist'))
         .on('end', () => utils.logger(`🦊  production 打包完成`))
+
+    if(yargs.argv.cdn) {
+        gulp.src('dist/dev/app/static/**')
+            .pipe(zip(`dev-cdn-${+new Date}.zip`))
+            .pipe(gulp.dest('dist'))
+            .on('end', () => utils.logger(`🦊  dev cdn 文件打包完成`))
+
+        gulp.src('dist/production/app/static/**')
+            .pipe(zip(`production-cdn-${+new Date}.zip`))
+            .pipe(gulp.dest('dist'))
+            .on('end', () => utils.logger(`🦊  production cdn 文件打包完成`))
+    }
 })
 
 gulp.task('debug', callback => {

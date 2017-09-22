@@ -16,6 +16,9 @@
         }
     },
     "rootFontSize": 75,
+    "cdnHost": "//cdn.example.com/",
+    "cdnBucket": "bucket",
+    "staticFile": ["js", "css", "images"],
     "server": {
         "port": 8008,
         "host": "localhost",
