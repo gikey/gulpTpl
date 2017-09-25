@@ -202,7 +202,7 @@ gulp.task('usemin', callback => {
             utils.logger(`🦊  静态文件合并完成`);
             callback && callback();
         })
-})
+});
 
 gulp.task('zip', () => {
     gulp.src('dist/dev/**')
@@ -226,10 +226,10 @@ gulp.task('zip', () => {
             .pipe(gulp.dest('dist'))
             .on('end', () => utils.logger(`🦊  production cdn 文件打包完成`))
     }
-})
+});
 
 gulp.task('debug', callback => {
-    if ( 'false' == yargs.argv.debug ) return callback && callback();
+    if ( 'false' == yargs.argv.debug ) return (callback && callback());
     gulp.src('dist/dev/app/views/*.html')
         .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
         .pipe(gulp.dest('dist/dev/app/views'))
@@ -237,7 +237,7 @@ gulp.task('debug', callback => {
             utils.logger(`🦊  测试版本添加 vconsole `);
             callback && callback();
         })
-})
+});
 
 gulp.task('dev', ['sass', 'es6', 'swig'], () => {
 
@@ -262,4 +262,4 @@ gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyI
 
 gulp.task('default', () => {
     utils.logger('😊  Nothing to do');
-})
+});
