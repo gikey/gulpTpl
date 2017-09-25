@@ -23,6 +23,7 @@ import revCollector from 'gulp-rev-collector';
 import config from './config.json';
 import proxy from 'http-proxy-middleware';
 import yargs from 'yargs';
+import replace from 'gulp-replace';
 import inject from 'gulp-inject-string';
 
 let build = process.argv[2] === 'build';
