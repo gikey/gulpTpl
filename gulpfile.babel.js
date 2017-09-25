@@ -23,7 +23,6 @@ import revCollector from 'gulp-rev-collector';
 import config from './config.json';
 import proxy from 'http-proxy-middleware';
 import yargs from 'yargs';
-import replace from 'gulp-replace';
 import inject from 'gulp-inject-string';
 
 let build = process.argv[2] === 'build';
@@ -71,10 +70,6 @@ gulp.task('revCss', callback => {
     gulp.src('dist/dev/app/static/css/**/*.css')
         .pipe(rev())
         .on('end', () => utils.logger(`🦊  css 文件名 hash `))
-        .pipe(gulpif(yargs.argv.cdn, replace(config.cssImgUrlPrefix, `//${config.cdnHost}/${config.cdnBucket}/`)))
-        .on('end', () => {
-            yargs.argv.cdn && utils.logger(`🦊  css 图片链接替换 `)
-        })
         .pipe(gulp.dest('dist/dev/app/static/css'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/css'))
