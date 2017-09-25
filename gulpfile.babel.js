@@ -70,6 +70,10 @@ gulp.task('revCss', callback => {
     gulp.src('dist/dev/app/static/css/**/*.css')
         .pipe(rev())
         .on('end', () => utils.logger(`🦊  css 文件名 hash `))
+        .pipe(gulpif(yargs.argv.cdn, replace(config.cssImgUrlPrefix, `//${config.cdnHost}/${config.cdnBucket}/`)))
+        .on('end', () => {
+            yargs.argv.cdn && utils.logger(`🦊  css 图片链接替换 `)
+        })
         .pipe(gulp.dest('dist/dev/app/static/css'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/css'))
@@ -95,10 +99,9 @@ gulp.task('revImg', callback => {
 gulp.task('revHtml', callback => {
     let revConfig = { replaceReved: true };
     if(yargs.argv.cdn) {
-        let staticPrefix = '../static/';
         revConfig.dirReplacements = {};
         config.staticFile.forEach((file) => {
-            revConfig.dirReplacements[staticPrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
+            revConfig.dirReplacements[config.staticFilePrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
         })
     }
     gulp.src(['dist/rev/**/*.json', 'dist/dev/app/views/**/*.html'])

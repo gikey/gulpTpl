@@ -19,6 +19,8 @@
     "cdnHost": "cdn.example.com",
     "cdnBucket": "bucket",
     "staticFile": ["js", "css", "images"],
+    "staticFilePrefix": "../static/",
+    "cssImgUrlPrefix": "../images/",
     "server": {
         "port": 8008,
         "host": "localhost",
