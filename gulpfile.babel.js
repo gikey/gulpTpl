@@ -179,7 +179,7 @@ gulp.task('copyLib', callback => {
     gulp.src('src/static/**/lib/*')
         .pipe(gulp.dest('dist/dev/app/static'))
         .on('end', () => {
-            utils.logger(`🍹 拷贝 lib 目录到 dev/app/static`);
+            utils.logger(`🦊 拷贝 lib 目录到 dev/app/static`);
             callback &&  callback();
         })
 });
