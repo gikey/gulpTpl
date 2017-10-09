@@ -2,7 +2,6 @@ import gulp from 'gulp';
 import sass from 'gulp-sass';
 import csso from 'gulp-csso';
 import sequence from 'gulp-sequence';
-import uglify from 'gulp-uglify';
 import minify from 'gulp-minify';
 import zip from 'gulp-zip';
 import del from 'del';
