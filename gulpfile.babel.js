@@ -3,6 +3,7 @@ import sass from 'gulp-sass';
 import csso from 'gulp-csso';
 import sequence from 'gulp-sequence';
 import uglify from 'gulp-uglify';
+import minify from 'gulp-minify';
 import zip from 'gulp-zip';
 import del from 'del';
 import fs from 'fs-extra';
@@ -156,7 +157,11 @@ gulp.task('es6', callback => {
             presets: ['es2015']
         }))
         .on('end', () => utils.logger(`🦊  es6 编译完成`))
-        .pipe(gulpif(build, uglify()))
+        .pipe(gulpif(build, minify({
+            noSource: true,
+            preserveComments: 'some',
+            ignoreFiles: ['.min.js', '-min.js']
+        })))
         .on('end', () => build && utils.logger(`🦊  js 压缩完成 `))
         .pipe(gulpif(!build, sourcemaps.write('./')))
         .pipe(gulpif(!build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
