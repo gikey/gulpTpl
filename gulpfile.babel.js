@@ -131,7 +131,7 @@ gulp.task('clean', callback => {
 
 gulp.task('config', callback => {
     let _config = config.app,
-    tpl = new nunjucks.Environment(new nunjucks.FileSystemLoader('nginx'));
+    tpl = new nunjucks.Environment(new nunjucks.FileSystemLoader('sce'));
 
     for(var c in _config) {
         fs.outputFileSync(`dist/${c}/app.yaml`, tpl.render('app.yaml', {
