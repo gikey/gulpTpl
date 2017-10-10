@@ -169,7 +169,7 @@ gulp.task('es6', callback => {
         .pipe(gulpif(!options.build, sourcemaps.write('./')))
         .pipe(gulpif(!options.build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
         .on('end', () => {
-            utils.logger(`🦊  js 输出 ${ build ? 'dist/dev/app/static/js': 'src/static/js'}`);
+            utils.logger(`🦊  js 输出 ${ options.build ? 'dist/dev/app/static/js': 'src/static/js'}`);
             callback && callback();
         })
 });
