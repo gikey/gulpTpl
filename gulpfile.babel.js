@@ -161,6 +161,9 @@ gulp.task('es6', callback => {
         }))
         .on('end', () => utils.logger(`🦊  es6 编译完成`))
         .pipe(gulpif(options.build, minify({
+            ext: {
+                min:'.min.js'
+            },
             noSource: true,
             preserveComments: 'some',
             ignoreFiles: ['.min.js', '-min.js']
