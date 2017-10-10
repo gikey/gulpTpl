@@ -25,25 +25,29 @@ import proxy from 'http-proxy-middleware';
 import yargs from 'yargs';
 import inject from 'gulp-inject-string';
 
-let build = process.argv[2] === 'build';
+const options = {
+    build: process.argv[2] === 'build',
+    debug: yargs.argv.debug,
+    cdn: yargs.argv.cdn
+}
 
 gulp.task('sass', callback => {
     gulp.src(['src/static/scss/**/*.scss', '!src/static/scss/lib/**/*'])
-        .pipe(gulpif(!build, plumber()))
-        .pipe(gulpif(!build, sourcemaps.init()))
+        .pipe(gulpif(!options.build, plumber()))
+        .pipe(gulpif(!options.build, sourcemaps.init()))
         .pipe(sass())
         .on('end', () => utils.logger(`🦊  sass 编译完成 `))
         .pipe(postcss(utils.percessors))
         .on('end', () => utils.logger(`🦊  postcss 处理完成 `))
-        .pipe(gulpif(build, csso()))
-        .on('end', () => build && utils.logger(`🦊  css 压缩完成 `))
-        .pipe(gulpif(!build, sourcemaps.write('./')))
-        .pipe(gulpif(!build, gulp.dest('src/static/css'), gulp.dest('dist/dev/app/static/css')))
+        .pipe(gulpif(options.build, csso()))
+        .on('end', () => options.build && utils.logger(`🦊  css 压缩完成 `))
+        .pipe(gulpif(!options.build, sourcemaps.write('./')))
+        .pipe(gulpif(!options.build, gulp.dest('src/static/css'), gulp.dest('dist/dev/app/static/css')))
         .on('end', () => {
-            utils.logger(`🦊  css 输出 ${ build ? 'dist/dev/app/static/css': 'src/static/css'}`);
+            utils.logger(`🦊  css 输出 ${ options.build ? 'dist/dev/app/static/css': 'src/static/css'}`);
             callback && callback();
         })
-        .pipe(gulpif(!build, browserSync.stream({ match: '**/*.css' })))
+        .pipe(gulpif(!options.build, browserSync.stream({ match: '**/*.css' })))
 });
 
 gulp.task('swig', callback => {
@@ -55,13 +59,13 @@ gulp.task('swig', callback => {
             }
         }))
         .on('end', () => utils.logger(`🦊  swig 编译完成`))
-        .pipe(gulpif(build, htmlmin({
+        .pipe(gulpif(options.build, htmlmin({
             collapseWhitespace: true
         })))
-        .on('end', () => build && utils.logger(`🦊  html 压缩完成`))
-        .pipe(gulpif(!build, gulp.dest('src/views'), gulp.dest('dist/dev/app/views')))
+        .on('end', () => options.build && utils.logger(`🦊  html 压缩完成`))
+        .pipe(gulpif(!options.build, gulp.dest('src/views'), gulp.dest('dist/dev/app/views')))
         .on('end', () => {
-            utils.logger(`🦊  html 输出 ${ build ? 'dist/dev/app/views': 'src/views'}`);
+            utils.logger(`🦊  html 输出 ${ options.build ? 'dist/dev/app/views': 'src/views'}`);
             callback && callback();
         })
 });
@@ -94,7 +98,7 @@ gulp.task('revImg', callback => {
 
 gulp.task('revHtml', callback => {
     let revConfig = { replaceReved: true };
-    if(yargs.argv.cdn) {
+    if(options.cdn) {
         revConfig.dirReplacements = {};
         config.staticFile.forEach((file) => {
             revConfig.dirReplacements[config.staticFilePrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
@@ -150,20 +154,20 @@ gulp.task('config', callback => {
 
 gulp.task('es6', callback => {
     gulp.src(['src/static/es6/**/*.js', '!src/static/es6/lib/**/*'])
-        .pipe(gulpif(!build, plumber()))
-        .pipe(gulpif(!build, sourcemaps.init()))
+        .pipe(gulpif(!options.build, plumber()))
+        .pipe(gulpif(!options.build, sourcemaps.init()))
         .pipe(babel({
             presets: ['es2015']
         }))
         .on('end', () => utils.logger(`🦊  es6 编译完成`))
-        .pipe(gulpif(build, minify({
+        .pipe(gulpif(options.build, minify({
             noSource: true,
             preserveComments: 'some',
             ignoreFiles: ['.min.js', '-min.js']
         })))
-        .on('end', () => build && utils.logger(`🦊  js 压缩完成 `))
-        .pipe(gulpif(!build, sourcemaps.write('./')))
-        .pipe(gulpif(!build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
+        .on('end', () => options.build && utils.logger(`🦊  js 压缩完成 `))
+        .pipe(gulpif(!options.build, sourcemaps.write('./')))
+        .pipe(gulpif(!options.build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
         .on('end', () => {
             utils.logger(`🦊  js 输出 ${ build ? 'dist/dev/app/static/js': 'src/static/js'}`);
             callback && callback();
@@ -218,7 +222,7 @@ gulp.task('zip', () => {
         .pipe(gulp.dest('dist'))
         .on('end', () => utils.logger(`🦊  production 打包完成`))
 
-    if(yargs.argv.cdn) {
+    if(options.cdn) {
         gulp.src('dist/dev/app/static/**')
             .pipe(zip(`dev-cdn-${+new Date}.zip`))
             .pipe(gulp.dest('dist'))
@@ -232,8 +236,9 @@ gulp.task('zip', () => {
 });
 
 gulp.task('debug', callback => {
-    if ( 'false' == yargs.argv.debug ) return (callback && callback());
-    gulp.src('dist/dev/app/views/*.html')
+    if ( 'false' == options.debug ) return (callback && callback());
+    let sourceUrl = options.debug == 'production' ? ['dist/dev/app/views/*.html', 'dist/production/app/views/*.html'] : 'dist/dev/app/views/*.html';
+    gulp.src(sourceUrl)
         .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
         .pipe(gulp.dest('dist/dev/app/views'))
         .on('end', () => {
