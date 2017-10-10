@@ -6,7 +6,7 @@ module.exports = {
     logger(info) {
         console.log(chalk.keyword('orange')(info))
     },
-    percessors : [
+    percessors: [
         require('autoprefixer')(),
         require('postcss-triangle')(),
         require('postcss-cssnext')(),
