@@ -24,6 +24,7 @@ import config from './config.json';
 import proxy from 'http-proxy-middleware';
 import yargs from 'yargs';
 import inject from 'gulp-inject-string';
+import mergeStream from 'merge-stream';
 
 const options = {
     build: process.argv[2] === 'build',
@@ -215,39 +216,37 @@ gulp.task('usemin', callback => {
 });
 
 gulp.task('zip', () => {
-    gulp.src('dist/dev/**')
-        .pipe(zip(`dev-${+new Date}.zip`))
-        .pipe(gulp.dest('dist'))
-        .on('end', () => utils.logger(`🦊  dev 打包完成`))
-
-    gulp.src('dist/production/**')
-        .pipe(zip(`production-${+new Date}.zip`))
-        .pipe(gulp.dest('dist'))
-        .on('end', () => utils.logger(`🦊  production 打包完成`))
-
+    let folders = ['dev', 'production'],
+        cdnTasks = [],
+        tasks = folders.map( element  => {
+            return gulp.src(`dist/${element}/**`)
+                .pipe(zip(`${element}-${+new Date}.zip`))
+                .pipe(gulp.dest('dist'))
+                .on('end', () => utils.logger(`🦊  ${element} 打包完成`))
+        })
     if(options.cdn) {
-        gulp.src('dist/dev/app/static/**')
-            .pipe(zip(`dev-cdn-${+new Date}.zip`))
-            .pipe(gulp.dest('dist'))
-            .on('end', () => utils.logger(`🦊  dev cdn 文件打包完成`))
-
-        gulp.src('dist/production/app/static/**')
-            .pipe(zip(`production-cdn-${+new Date}.zip`))
-            .pipe(gulp.dest('dist'))
-            .on('end', () => utils.logger(`🦊  production cdn 文件打包完成`))
+        cdnTasks = folders.map( element => {
+            return gulp.src(`dist/${element}/app/static/**`)
+                .pipe(zip(`${element}-cdn-${+new Date}.zip`))
+                .pipe(gulp.dest('dist'))
+                .on('end', () => utils.logger(`🦊  ${element} cdn 文件打包完成`))
+        })
     }
+    return mergeStream(tasks.concat(cdnTasks))
 });
 
 gulp.task('debug', callback => {
     if ( 'false' == options.debug ) return (callback && callback());
-    let sourceUrl = options.debug == 'production' ? ['dist/dev/app/views/*.html', 'dist/production/app/views/*.html'] : 'dist/dev/app/views/*.html';
-    gulp.src(sourceUrl)
-        .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
-        .pipe(gulp.dest('dist/dev/app/views'))
-        .on('end', () => {
-            utils.logger(`🦊  测试版本添加 vconsole `);
-            callback && callback();
+    let folders = options.debug == 'production' ? ['dev', 'production'] : ['dev'],
+        tasks = folders.map( element => {
+            return gulp.src(`dist/${element}/app/views/*.html`)
+                .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
+                .pipe(gulp.dest(`dist/${element}/app/views`))
+                .on('end', () => {
+                    utils.logger(`🦊  ${element} 添加 vconsole `);
+                })
         })
+    return (mergeStream(tasks) && callback && callback());
 });
 
 gulp.task('dev', ['sass', 'es6', 'swig'], () => {

@@ -36,6 +36,7 @@
     "gulp-usemin": "^0.3.28",
     "gulp-zip": "^4.0.0",
     "http-proxy-middleware": "^0.17.4",
+    "merge-stream": "^1.0.1",
     "mockjs": "^1.0.1-beta3",
     "nunjucks": "^3.0.1",
     "postcss-px2rem": "^0.3.0",
