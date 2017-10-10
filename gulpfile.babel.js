@@ -10,7 +10,6 @@ import swig from 'gulp-swig';
 import htmlmin from 'gulp-htmlmin';
 import nunjucks from 'nunjucks';
 import gulpif from 'gulp-if';
-import px2rem from 'gulp-px2rem-plugin';
 import plumber from 'gulp-plumber';
 import browserSync from 'browser-sync';
 import sourcemaps from 'gulp-sourcemaps';
