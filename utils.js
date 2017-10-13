@@ -9,7 +9,6 @@ module.exports = {
     percessors: [
         require('autoprefixer')(),
         require('postcss-triangle')(),
-        require('postcss-cssnext')(),
         require('postcss-px2rem')({
             remUnit: config.rootFontSize || 75
         })

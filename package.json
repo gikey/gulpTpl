@@ -38,7 +38,6 @@
     "merge-stream": "^1.0.1",
     "mockjs": "^1.0.1-beta3",
     "nunjucks": "^3.0.1",
-    "postcss-cssnext": "^3.0.2",
     "postcss-px2rem": "^0.3.0",
     "postcss-triangle": "^1.0.1",
     "yargs": "^8.0.2"
