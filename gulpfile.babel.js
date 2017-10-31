@@ -43,9 +43,9 @@ gulp.task('sass', callback => {
         .pipe(gulpif(options.build, csso()))
         .on('end', () => options.build && utils.logger(`🦊  css 压缩完成 `))
         .pipe(gulpif(!options.build, sourcemaps.write('./')))
-        .pipe(gulpif(!options.build, gulp.dest('src/static/css'), gulp.dest('dist/dev/app/static/css')))
+        .pipe(gulpif(!options.build, gulp.dest('src/static/css'), gulp.dest('dist/test/app/static/css')))
         .on('end', () => {
-            utils.logger(`🦊  css 输出 ${ options.build ? 'dist/dev/app/static/css': 'src/static/css'}`);
+            utils.logger(`🦊  css 输出 ${ options.build ? 'dist/test/app/static/css': 'src/static/css'}`);
             callback && callback();
         })
         .pipe(gulpif(!options.build, browserSync.stream({ match: '**/*.css' })))
@@ -64,18 +64,18 @@ gulp.task('swig', callback => {
             collapseWhitespace: true
         })))
         .on('end', () => options.build && utils.logger(`🦊  html 压缩完成`))
-        .pipe(gulpif(!options.build, gulp.dest('src/views'), gulp.dest('dist/dev/app/views')))
+        .pipe(gulpif(!options.build, gulp.dest('src/views'), gulp.dest('dist/test/app/views')))
         .on('end', () => {
-            utils.logger(`🦊  html 输出 ${ options.build ? 'dist/dev/app/views': 'src/views'}`);
+            utils.logger(`🦊  html 输出 ${ options.build ? 'dist/test/app/views': 'src/views'}`);
             callback && callback();
         })
 });
 
 gulp.task('revCss', callback => {
-    gulp.src('dist/dev/app/static/css/**/*.css')
+    gulp.src('dist/test/app/static/css/**/*.css')
         .pipe(rev())
         .on('end', () => utils.logger(`🦊  css 文件名 hash `))
-        .pipe(gulp.dest('dist/dev/app/static/css'))
+        .pipe(gulp.dest('dist/test/app/static/css'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/css'))
         .on('end', () => {
@@ -85,10 +85,10 @@ gulp.task('revCss', callback => {
 });
 
 gulp.task('revImg', callback => {
-    gulp.src('dist/dev/app/static/images/*')
+    gulp.src('dist/test/app/static/images/*')
         .pipe(rev())
         .on('end', () => utils.logger(`🦊  images 文件名 hash `))
-        .pipe(gulp.dest('dist/dev/app/static/images'))
+        .pipe(gulp.dest('dist/test/app/static/images'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/images'))
         .on('end', () => {
@@ -105,9 +105,9 @@ gulp.task('revHtml', callback => {
             revConfig.dirReplacements[config.staticFilePrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
         })
     }
-    gulp.src(['dist/rev/**/*.json', 'dist/dev/app/views/**/*.html'])
+    gulp.src(['dist/rev/**/*.json', 'dist/test/app/views/**/*.html'])
         .pipe(revCollector(revConfig))
-        .pipe(gulp.dest('dist/dev/app/views'))
+        .pipe(gulp.dest('dist/test/app/views'))
         .on('end', function() {
             utils.logger(`🦊  html 外链替换 `);
             callback && callback();
@@ -115,10 +115,10 @@ gulp.task('revHtml', callback => {
 });
 
 gulp.task('revJS', callback => {
-    gulp.src('dist/dev/app/static/js/**/*.js')
+    gulp.src('dist/test/app/static/js/**/*.js')
         .pipe(rev())
         .on('end', () => utils.logger(`🦊  js 文件名 hash `))
-        .pipe(gulp.dest('dist/dev/app/static/js'))
+        .pipe(gulp.dest('dist/test/app/static/js'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('dist/rev/js'))
         .on('end', () => {
@@ -170,15 +170,15 @@ gulp.task('es6', callback => {
         })))
         .on('end', () => options.build && utils.logger(`🦊  js 压缩完成 `))
         .pipe(gulpif(!options.build, sourcemaps.write('./')))
-        .pipe(gulpif(!options.build, gulp.dest('src/static/js'), gulp.dest('dist/dev/app/static/js')))
+        .pipe(gulpif(!options.build, gulp.dest('src/static/js'), gulp.dest('dist/test/app/static/js')))
         .on('end', () => {
-            utils.logger(`🦊  js 输出 ${ options.build ? 'dist/dev/app/static/js': 'src/static/js'}`);
+            utils.logger(`🦊  js 输出 ${ options.build ? 'dist/test/app/static/js': 'src/static/js'}`);
             callback && callback();
         })
 });
 
 gulp.task('copy', callback => {
-    gulp.src('dist/dev/**/*')
+    gulp.src('dist/test/**/*')
         .pipe(gulp.dest('dist/production'))
         .on('end', () => {
             utils.logger(`🦊  拷贝 dev 目录到 production`);
@@ -188,7 +188,7 @@ gulp.task('copy', callback => {
 
 gulp.task('copyLib', callback => {
     gulp.src('src/static/**/lib/*')
-        .pipe(gulp.dest('dist/dev/app/static'))
+        .pipe(gulp.dest('dist/test/app/static'))
         .on('end', () => {
             utils.logger(`🦊 拷贝 lib 目录到 dev/app/static`);
             callback &&  callback();
@@ -197,7 +197,7 @@ gulp.task('copyLib', callback => {
 
 gulp.task('copyImg', callback => {
     gulp.src('src/static/images/**/*')
-        .pipe(gulp.dest('dist/dev/app/static/images'))
+        .pipe(gulp.dest('dist/test/app/static/images'))
         .on('end', () => {
             utils.logger(`🦊  拷贝图片到 dev/app/static/images`);
             callback &&  callback();
@@ -205,9 +205,9 @@ gulp.task('copyImg', callback => {
 });
 
 gulp.task('usemin', callback => {
-    gulp.src('dist/dev/app/views/*.html')
+    gulp.src('dist/test/app/views/*.html')
         .pipe(usemin())
-        .pipe(gulp.dest('dist/dev/app/views'))
+        .pipe(gulp.dest('dist/test/app/views'))
         .on('end', () => {
             utils.logger(`🦊  静态文件合并完成`);
             callback && callback();

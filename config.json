@@ -1,6 +1,6 @@
 {
     "app": {
-        "dev": {
+        "test": {
             "appId": 7654321,
             "proxys": [{
                 "pathRewrite": "api",
