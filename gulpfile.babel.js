@@ -1,3 +1,4 @@
+'use strict';
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import csso from 'gulp-csso';
@@ -136,7 +137,6 @@ gulp.task('clean', callback => {
 gulp.task('config', callback => {
     let _config = config.app,
     tpl = new nunjucks.Environment(new nunjucks.FileSystemLoader('sce'));
-
     for(var c in _config) {
         fs.outputFileSync(`dist/${c}/app.yaml`, tpl.render('app.yaml', {
             appId: _config[c]['appId']
@@ -234,8 +234,8 @@ gulp.task('zip', () => {
     return mergeStream(tasks.concat(cdnTasks))
 });
 
-gulp.task('debug', callback => {
-    if ( 'false' == options.debug ) return (callback && callback());
+gulp.task('debug', () => {
+    if ( 'false' == options.debug ) return;
     let folders = options.debug == 'production' ? ['dev', 'production'] : ['dev'],
         tasks = folders.map( element => {
             return gulp.src(`dist/${element}/app/views/*.html`)
@@ -245,11 +245,10 @@ gulp.task('debug', callback => {
                     utils.logger(`🦊  ${element} 添加 vconsole `);
                 })
         })
-    return (mergeStream(tasks) && callback && callback());
+    return mergeStream(tasks)
 });
 
 gulp.task('dev', ['sass', 'es6', 'swig'], () => {
-
     browserSync.init({
         server: config.server.root || './',
         port: config.server.port || '3030',
@@ -260,14 +259,13 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
         notify: config.server.notify,
         middleware: utils.proxys,
     }, () => utils.logger(`🦊  服务启动...`));
-
     gulp.watch('src/static/scss/**/*.scss', ['sass']);
     gulp.watch('src/static/es6/**/*.js', ['es6']);
     gulp.watch('src/tpls/**/*', ['swig']);
     gulp.watch(['src/**/*', '!src/static/scss', '!src/static/css']).on('change', browserSync.reload);
 });
 
-gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['debug','config'], 'zip'));
+gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['config', 'debug'], 'zip'));
 
 gulp.task('default', () => {
     utils.logger('😊  Nothing to do');
