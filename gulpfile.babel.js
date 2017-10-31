@@ -181,7 +181,7 @@ gulp.task('copy', callback => {
     gulp.src('dist/test/**/*')
         .pipe(gulp.dest('dist/production'))
         .on('end', () => {
-            utils.logger(`🦊  拷贝 dev 目录到 production`);
+            utils.logger(`🦊  拷贝 test 目录到 production`);
             callback && callback();
         })
 });
@@ -190,7 +190,7 @@ gulp.task('copyLib', callback => {
     gulp.src('src/static/**/lib/*')
         .pipe(gulp.dest('dist/test/app/static'))
         .on('end', () => {
-            utils.logger(`🦊 拷贝 lib 目录到 dev/app/static`);
+            utils.logger(`🦊 拷贝 lib 目录到 test/app/static`);
             callback &&  callback();
         })
 });
@@ -199,7 +199,7 @@ gulp.task('copyImg', callback => {
     gulp.src('src/static/images/**/*')
         .pipe(gulp.dest('dist/test/app/static/images'))
         .on('end', () => {
-            utils.logger(`🦊  拷贝图片到 dev/app/static/images`);
+            utils.logger(`🦊  拷贝图片到 test/app/static/images`);
             callback &&  callback();
         })
 });
@@ -215,7 +215,7 @@ gulp.task('usemin', callback => {
 });
 
 gulp.task('zip', () => {
-    let folders = ['dev', 'production'],
+    let folders = ['test', 'production'],
         cdnTasks = [],
         tasks = folders.map( element  => {
             return gulp.src(`dist/${element}/**`)
@@ -236,7 +236,7 @@ gulp.task('zip', () => {
 
 gulp.task('debug', () => {
     if ( 'false' == options.debug ) return;
-    let folders = options.debug == 'production' ? ['dev', 'production'] : ['dev'],
+    let folders = options.debug == 'production' ? ['test', 'production'] : ['test'],
         tasks = folders.map( element => {
             return gulp.src(`dist/${element}/app/views/*.html`)
                 .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
