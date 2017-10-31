@@ -265,7 +265,7 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
     gulp.watch(['src/**/*', '!src/static/scss', '!src/static/css']).on('change', browserSync.reload);
 });
 
-gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['config', 'debug'], 'zip'));
+gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['debug', 'config'], 'zip'));
 
 gulp.task('default', () => {
     utils.logger('😊  Nothing to do');
