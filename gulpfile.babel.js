@@ -25,11 +25,13 @@ import proxy from 'http-proxy-middleware';
 import yargs from 'yargs';
 import inject from 'gulp-inject-string';
 import mergeStream from 'merge-stream';
+import imagemin from 'gulp-image';
 
 const options = {
     build: process.argv[2] === 'build',
     debug: yargs.argv.debug,
-    cdn: yargs.argv.cdn
+    cdn: yargs.argv.cdn,
+    uncompress: yargs.argv.uncompress
 }
 
 gulp.task('sass', callback => {
@@ -195,14 +197,26 @@ gulp.task('copyLib', callback => {
         })
 });
 
-gulp.task('copyImg', callback => {
+gulp.task('imageMin', callback => {
     gulp.src('src/static/images/**/*')
+        .pipe(gulpif(!options.uncompress, imagemin({
+            pngquant: true,
+            optipng: false,
+            zopflipng: true,
+            jpegRecompress: false,
+            mozjpeg: true,
+            guetzli: false,
+            gifsicle: true,
+            svgo: true,
+            concurrent: 10
+        })))
+        .on('end', () => !options.uncompress && utils.logger(`🦊  图片压缩完成`))
         .pipe(gulp.dest('dist/test/app/static/images'))
         .on('end', () => {
-            utils.logger(`🦊  拷贝图片到 test/app/static/images`);
+            utils.logger(`🦊  图片输出到 test/app/static/images`);
             callback &&  callback();
         })
-});
+})
 
 gulp.task('usemin', callback => {
     gulp.src('dist/test/app/views/*.html')
@@ -265,7 +279,7 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
     gulp.watch(['src/**/*', '!src/static/scss', '!src/static/css']).on('change', browserSync.reload);
 });
 
-gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'copyImg'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['debug', 'config'], 'zip'));
+gulp.task('build', sequence('clean', ['sass', 'es6', 'swig'], ['copyLib', 'imageMin'], 'usemin', ['revCss', 'revJS', 'revImg'], 'revHtml', 'copy', ['debug', 'config'], 'zip'));
 
 gulp.task('default', () => {
     utils.logger('😊  Nothing to do');
