@@ -31,7 +31,8 @@ const options = {
     build: process.argv[2] === 'build',
     debug: yargs.argv.debug,
     cdn: yargs.argv.cdn,
-    uncompress: yargs.argv.uncompress
+    uncompress: yargs.argv.uncompress,
+    vconsole: true
 }
 
 gulp.task('sass', callback => {
@@ -59,6 +60,9 @@ gulp.task('swig', callback => {
         .pipe(swig({
             defaults: {
                 cache: false
+            },
+            data: {
+                debug: !options.build && options.vconsole
             }
         }))
         .on('end', () => utils.logger(`🦊  swig 编译完成`))

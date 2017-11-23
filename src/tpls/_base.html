@@ -12,7 +12,11 @@
   {% block head %}
   <title>demo</title>
   {% endblock %}
+  {% if debug %}
+  <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>
+  {% endif %}
   <script>document.documentElement.style.fontSize=document.documentElement.clientWidth/10+"px";</script>
+  }
 </head>
 <body>
 {% block body %}{% endblock %}
