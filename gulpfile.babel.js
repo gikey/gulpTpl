@@ -45,7 +45,8 @@ gulp.task('sass', callback => {
             'width_design': config.remConfig.widthDesign,
             'valid_num': config.remConfig.validNum,
             'ignore_px': config.remConfig.ignorePX,
-            'ignoreSelector': config.remConfig.ignoreSelector
+            'ignoreSelector': config.remConfig.ignoreSelector,
+            'pieces': config.remConfig.pieces
         })))
         .on('end', () => !config.remConfig.disabled && utils.logger(`🦊  px => rem 完成 `))
         .pipe(postcss(utils.percessors))
@@ -69,7 +70,11 @@ gulp.task('swig', callback => {
                 cache: false
             },
             data: {
-                debug: !options.build && options.debug
+                'debug': !options.build && options.debug,
+                'remConfig': {
+                    disabled: config.remConfig.disabled,
+                    pieces: config.remConfig.pieces
+                }
             }
         }))
         .on('end', () => utils.logger(`🦊  swig 编译完成`))

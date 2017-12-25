@@ -15,7 +15,9 @@
   {% if debug %}
   <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>
   {% endif %}
-  <script>document.documentElement.style.fontSize=document.documentElement.clientWidth/10+"px";</script>
+  {% if !remConfig.disabled %}
+  <script>document.documentElement.style.fontSize=document.documentElement.clientWidth/{{remConfig.pieces}}+"px";</script>
+  {% endif %}
 </head>
 <body>
 {% block body %}{% endblock %}

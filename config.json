@@ -28,6 +28,7 @@
         "widthDesign": 750,
         "validNum": 6,
         "ignorePX": [1],
+        "pieces": 10,
         "ignoreSelector": [".class1"]
     },
     "server": {
