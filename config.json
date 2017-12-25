@@ -7,7 +7,7 @@
                 "host": "api-test.example.com"
             }]
         },
-        "production": {
+        "prod": {
             "appId": 1234567,
             "proxys": [{
                 "pathRewrite": "api",

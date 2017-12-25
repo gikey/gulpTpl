@@ -184,9 +184,9 @@ gulp.task('es6', callback => {
 
 gulp.task('copy', callback => {
     gulp.src('dist/test/**/*')
-        .pipe(gulp.dest('dist/production'))
+        .pipe(gulp.dest('dist/prod'))
         .on('end', () => {
-            utils.logger(`🦊  拷贝 test 目录到 production`);
+            utils.logger(`🦊  拷贝 test 目录到 prod`);
             callback && callback();
         })
 });
@@ -232,7 +232,7 @@ gulp.task('usemin', callback => {
 });
 
 gulp.task('zip', () => {
-    let folders = ['test', 'production'],
+    let folders = ['test', 'prod'],
         cdnTasks = [],
         tasks = folders.map( element  => {
             return gulp.src(`dist/${element}/**`)
@@ -253,7 +253,7 @@ gulp.task('zip', () => {
 
 gulp.task('debug', () => {
     if ( 'false' == options.debug ) return;
-    let folders = options.debug == 'production' ? ['test', 'production'] : ['test'],
+    let folders = options.debug == 'prod' ? ['test', 'prod'] : ['test'],
         tasks = folders.map( element => {
             return gulp.src(`dist/${element}/app/views/*.html`)
                 .pipe(inject.before('</body>', '<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>\n'))
