@@ -15,24 +15,34 @@
             }]
         }
     },
-    "rootFontSize": 75,
-    "cdnHost": "cdn.example.com",
-    "cdnBucket": "bucket",
-    "staticFile": ["js", "css", "images"],
-    "staticFilePrefix": "../static/",
+    "cdnConfig": {
+        "cdnHost": "cdn.example.com",
+        "cdnBucket": "bucket"
+    },
+    "staticResource": {
+        "staticFile": ["js", "css", "images"],
+        "staticFilePrefix": "../static/"
+    },
+    "remConfig": {
+        "disabled": false,
+        "widthDesign": 750,
+        "validNum": 6,
+        "ignorePX": [1],
+        "ignoreSelector": [".class1"]
+    },
     "server": {
         "port": 8008,
         "host": "localhost",
         "open": "external",
         "notify": false,
         "root": "src",
-        "startPath": "views"
-    },
-    "proxys": [{
-        "api": "/api",
-        "target": "http://example.com",
-        "pathRewrite": {
-            "^/api/(.*)": "/$1"
-        }
-    }]
+        "startPath": "views",
+        "proxys": [{
+            "api": "/api",
+            "target": "http://example.com",
+            "pathRewrite": {
+                "^/api/(.*)": "/$1"
+            }
+        }]
+    }
 }

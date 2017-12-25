@@ -26,6 +26,7 @@ import yargs from 'yargs';
 import inject from 'gulp-inject-string';
 import mergeStream from 'merge-stream';
 import imagemin from 'gulp-image';
+import px2rem from 'gulp-px2rem-plugin';
 
 const options = {
     build: process.argv[2] === 'build',
@@ -40,6 +41,13 @@ gulp.task('sass', callback => {
         .pipe(gulpif(!options.build, sourcemaps.init()))
         .pipe(sass())
         .on('end', () => utils.logger(`🦊  sass 编译完成 `))
+        .pipe(gulpif(!config.remConfig.disabled, px2rem({
+            'width_design': config.remConfig.widthDesign,
+            'valid_num': config.remConfig.validNum,
+            'ignore_px': config.remConfig.ignorePX,
+            'ignoreSelector': config.remConfig.ignoreSelector
+        })))
+        .on('end', () => !config.remConfig.disabled && utils.logger(`🦊  px => rem 完成 `))
         .pipe(postcss(utils.percessors))
         .on('end', () => utils.logger(`🦊  postcss 处理完成 `))
         .pipe(gulpif(options.build, csso()))
@@ -106,8 +114,8 @@ gulp.task('revHtml', callback => {
     let revConfig = { replaceReved: true };
     if(options.cdn) {
         revConfig.dirReplacements = {};
-        config.staticFile.forEach((file) => {
-            revConfig.dirReplacements[config.staticFilePrefix+file] = `//${config.cdnHost}/${config.cdnBucket}/${file}/`
+        config.staticResource.staticFile.forEach((file) => {
+            revConfig.dirReplacements[config.staticResource.staticFilePrefix+file] = `//${config.cdnConfig.cdnHost}/${config.cdnConfig.cdnBucket}/${file}/`
         })
     }
     gulp.src(['dist/rev/**/*.json', 'dist/test/app/views/**/*.html'])

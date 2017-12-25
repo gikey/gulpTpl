@@ -8,14 +8,11 @@ module.exports = {
     },
     percessors: [
         require('autoprefixer')(),
-        require('postcss-triangle')(),
-        require('postcss-px2rem')({
-            remUnit: config.rootFontSize || 75
-        })
+        require('postcss-triangle')()
     ],
     proxys: (() => {
         let proxyArr = [];
-        config.proxys.forEach( p => {
+        config.server.proxys.forEach( p => {
             proxyArr.push( proxy( p.api, {
                 target: p.target,
                 changeOrigin: p.changeOrigin || true,

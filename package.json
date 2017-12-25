@@ -27,6 +27,7 @@
     "gulp-minify": "^1.0.0",
     "gulp-plumber": "^1.1.0",
     "gulp-postcss": "^7.0.0",
+    "gulp-px2rem-plugin": "^0.4.0",
     "gulp-rev": "^8.0.0",
     "gulp-rev-collector": "^1.2.2",
     "gulp-sass": "^3.1.0",
@@ -39,7 +40,6 @@
     "merge-stream": "^1.0.1",
     "mockjs": "^1.0.1-beta3",
     "nunjucks": "^3.0.1",
-    "postcss-px2rem": "^0.3.0",
     "postcss-triangle": "^1.0.1",
     "yargs": "^8.0.2"
   },
