@@ -282,8 +282,8 @@ gulp.task('dev', ['sass', 'es6', 'swig'], () => {
     browserSync.init({
         server: config.server.root || './',
         port: config.server.port || '3030',
-        host: config.server.host || '127.0.0.1',
-        open: config.server.open || 'local',
+        host: config.server.host,
+        open: config.server.open,
         startPath: config.server.startPath || './',
         browser: config.server.browser,
         notify: config.server.notify,
