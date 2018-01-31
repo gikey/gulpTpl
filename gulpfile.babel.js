@@ -32,7 +32,7 @@ const options = {
     build: process.argv[2] === 'build',
     debug: yargs.argv.debug,
     cdn: yargs.argv.cdn,
-    uncompress: yargs.argv.uncompress,
+    mimg: yargs.argv.mimg,
 }
 
 gulp.task('sass', callback => {
@@ -215,7 +215,7 @@ gulp.task('copyLib', callback => {
 
 gulp.task('imageMin', callback => {
     gulp.src('src/static/images/**/*')
-        .pipe(gulpif(!options.uncompress, imagemin({
+        .pipe(gulpif(options.mimg, imagemin({
             pngquant: true,
             optipng: false,
             zopflipng: true,
@@ -226,7 +226,7 @@ gulp.task('imageMin', callback => {
             svgo: true,
             concurrent: 10
         })))
-        .on('end', () => !options.uncompress && utils.logger(`🦊  图片压缩完成`))
+        .on('end', () => options.mimg && utils.logger(`🦊  图片压缩完成`))
         .pipe(gulp.dest('dist/test/app/static/images'))
         .on('end', () => {
             utils.logger(`🦊  图片输出到 test/app/static/images`);
